@@ -13,10 +13,10 @@ Passionate about applying data analytics, machine learning, and predictive model
 
 # Core Skills
 
-- Analytics & Modelling: *EDA, data cleaning, forecasting (Prophet, SARIMA), ML (Regression, Trees, K-Means)*
-- Business Intelligence: *Power BI dashboards, KPI design, performance reporting, data storytelling*
-- Tools & Tech: *Python, SQL, R, Power BI, Excel, Pandas, Scikit-learn, Azure, Git*
-- Frameworks & Problem-Solving: *CRISP–DM, McKinsey 7-Step, EAST Behavioural Framework*
+- Analytics & Modelling: EDA, data cleaning, forecasting (Prophet, SARIMA), ML (Regression, Trees, K-Means)
+- Business Intelligence: Power BI dashboards, KPI design, performance reporting, data storytelling
+- Tools & Tech: Python, SQL, R, Power BI, Excel, Pandas, Scikit-learn, Azure, Git
+- Frameworks & Problem-Solving: CRISP–DM, McKinsey 7-Step, EAST Behavioural Framework
 
 # Projects' Experience
 
