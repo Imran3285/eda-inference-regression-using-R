@@ -42,7 +42,3 @@ Passionate about applying data analytics, machine learning, and predictive model
 
 - Built ML model (77.5% accuracy) to optimise mobile contract marketing
 - Performed feature engineering, model tuning, and driver analysis
-
-# Professional Focus
-
-*Data Analytics | Sustainability | Transport | Energy | Public Policy*
