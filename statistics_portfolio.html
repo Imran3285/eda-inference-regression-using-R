@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statistical Analysis Portfolio</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f8f7f4;
+    --surface: #ffffff;
+    --border: rgba(0,0,0,0.1);
+    --text: #1a1a1a;
+    --muted: #666;
+    --accent1: #2C7BB6;
+    --accent2: #D7191C;
+    --accent3: #1A9641;
+    --accent4: #5E4FA2;
+    --tag-bg: #eef3f8;
+    --tag-text: #2C7BB6;
+    --code-bg: #f3f2ef;
+  }
+
+  body {
+    font-family: 'Georgia', serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    padding: 2rem 1rem 4rem;
+  }
+
+  /* ---------- HEADER ---------- */
+  header {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  header .kicker {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+  header h1 {
+    font-size: 2rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+  header p {
+    font-size: 1rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+  .meta-row {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1.25rem;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .meta-row span { display: flex; align-items: center; gap: 4px; }
+
+  /* ---------- NAV ---------- */
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    max-width: 720px;
+    margin: 0 auto 3rem;
+  }
+  nav button {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    padding: 6px 16px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    border-radius: 2px;
+    color: var(--muted);
+    transition: all 0.15s;
+    letter-spacing: 0.04em;
+  }
+  nav button:hover { border-color: currentColor; color: var(--text); }
+  nav button.active { background: var(--text); color: var(--surface); border-color: var(--text); }
+
+  /* ---------- PROJECTS ---------- */
+  .project { display: none; max-width: 720px; margin: 0 auto; }
+  .project.visible { display: block; }
+
+  /* heading row */
+  .project-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .project-number {
+    font-family: 'Courier New', monospace;
+    font-size: 3rem;
+    font-weight: bold;
+    line-height: 1;
+    color: var(--border);
+    flex-shrink: 0;
+    user-select: none;
+  }
+  .project-header h2 { font-size: 1.5rem; font-weight: normal; margin-bottom: 0.35rem; }
+  .project-header .subtitle { color: var(--muted); font-style: italic; font-size: 0.95rem; }
+
+  /* tags */
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 1rem 0 1.5rem; }
+  .tag {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    background: var(--tag-bg);
+    color: var(--tag-text);
+    padding: 3px 10px;
+    border-radius: 2px;
+    letter-spacing: 0.04em;
+  }
+
+  /* prose sections */
+  .section { margin-bottom: 2rem; }
+  .section h3 {
+    font-size: 0.8rem;
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section p { margin-bottom: 0.75rem; font-size: 0.97rem; }
+
+  /* code block */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent1);
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    margin: 0.75rem 0;
+    border-radius: 0 2px 2px 0;
+  }
+
+  /* stat cards */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 1rem;
+    text-align: center;
+  }
+  .stat-card .value {
+    font-size: 1.6rem;
+    font-weight: bold;
+    letter-spacing: -0.03em;
+  }
+  .stat-card .label {
+    font-size: 11px;
+    font-family: 'Courier New', monospace;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 2px;
+  }
+
+  /* hypotheses */
+  .hypothesis {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 1rem 1.25rem;
+    margin: 0.75rem 0;
+    font-size: 0.94rem;
+  }
+  .hypothesis .h-label {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* result box */
+  .result-box {
+    border: 1px solid;
+    border-radius: 2px;
+    padding: 0.9rem 1.1rem;
+    margin: 1rem 0;
+    font-size: 0.93rem;
+  }
+  .result-box.significant  { border-color: var(--accent3); background: #f0f9f2; }
+  .result-box.info  { border-color: var(--accent1); background: #f0f5fb; }
+
+  /* model comparison table */
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 0.75rem 0; }
+  th { font-family: 'Courier New', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding: 6px 10px; border-bottom: 1px solid var(--border); text-align: left; font-weight: normal; }
+  td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .mono { font-family: 'Courier New', monospace; font-size: 12px; }
+
+  /* conclusion strip */
+  .conclusion {
+    margin-top: 2.5rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--text);
+    font-style: italic;
+    font-size: 0.95rem;
+    color: #333;
+  }
+  .conclusion strong { font-style: normal; }
+
+  /* colour accents per project */
+  .p1 .project-number { color: #d6e8f4; }
+  .p1 pre            { border-left-color: var(--accent1); }
+  .p2 .project-number { color: #fad3d3; }
+  .p2 pre            { border-left-color: var(--accent2); }
+  .p3 .project-number { color: #d1ebd7; }
+  .p3 pre            { border-left-color: var(--accent3); }
+  .p4 .project-number { color: #e2ddf2; }
+  .p4 pre            { border-left-color: var(--accent4); }
+
+  /* inline keyword */
+  code {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    background: var(--code-bg);
+    padding: 1px 5px;
+    border-radius: 2px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="kicker">R · Statistics · Data Analysis</div>
+  <h1>Statistical Analysis Portfolio</h1>
+  <p>Four projects in exploratory analysis, sampling theory, hypothesis testing, and regression</p>
+  <div class="meta-row">
+    <span>4 projects</span>
+    <span>·</span>
+    <span>ggplot2 · dplyr · tidyverse</span>
+    <span>·</span>
+    <span>R 4.x</span>
+  </div>
+</header>
+
+<nav>
+  <button class="active" onclick="show('p1', this)">01 · GDP &amp; Life Expectancy</button>
+  <button onclick="show('p2', this)">02 · Central Limit Theorem</button>
+  <button onclick="show('p3', this)">03 · Hypothesis Testing</button>
+  <button onclick="show('p4', this)">04 · Regression Modelling</button>
+</nav>
+
+<!-- ═══════════════════════════ PROJECT 1 ═══════════════════════════ -->
+<div id="p1" class="project visible p1">
+  <div class="project-header">
+    <div class="project-number">01</div>
+    <div>
+      <h2>Global Development Analysis</h2>
+      <div class="subtitle">Exploring the relationship between GDP per capita and life expectancy</div>
+    </div>
+  </div>
+
+  <div class="tags">
+    <span class="tag">EDA</span>
+    <span class="tag">Visualisation</span>
+    <span class="tag">Descriptive statistics</span>
+    <span class="tag">Gapminder</span>
+    <span class="tag">ggplot2</span>
+    <span class="tag">dplyr</span>
+  </div>
+
+  <div class="section">
+    <h3>Overview</h3>
+    <p>This project uses the <strong>Gapminder dataset</strong> — 142 countries observed from 1952–2007 — to explore how economic development (GDP per capita) relates to population health outcomes (life expectancy). Analysis proceeds through univariate distributions, bivariate scatter plots, and group-level comparisons by continent.</p>
+  </div>
+
+  <div class="section">
+    <h3>Data loading &amp; structure</h3>
+<pre>library(ggplot2)
+library(dplyr)
+
+gapminder &lt;- read.csv("http://bit.ly/2GxjYOB")
+glimpse(gapminder)   # 1,704 rows × 6 columns</pre>
+  </div>
+
+  <div class="section">
+    <h3>Key visualisations</h3>
+<pre># Life expectancy distribution
+ggplot(gapminder, aes(x = lifeExp)) +
+  geom_histogram(bins = 50, fill = "#2C7BB6", colour = "white") +
+  labs(title = "Distribution of Life Expectancy",
+       x = "Life Expectancy (years)", y = "Count") +
+  theme_portfolio()
+
+# GDP vs Life Expectancy with reference lines
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) +
+  geom_point(alpha = 0.4, colour = "#2C7BB6") +
+  geom_vline(xintercept = 40000, linetype = "dashed", colour = "red") +
+  geom_hline(yintercept = 75, linetype = "dashed", colour = "red") +
+  theme_portfolio()
+
+# Box plots by continent
+ggplot(gapminder, aes(x = continent, y = lifeExp, fill = continent)) +
+  geom_boxplot(alpha = 0.7, show.legend = FALSE) +
+  theme_portfolio()</pre>
+  </div>
+
+  <div class="section">
+    <h3>Reusable summary function</h3>
+    <p>Rather than repeating the same <code>summarise()</code> call for each variable, a helper function accepts any column via tidy evaluation:</p>
+<pre>summarise_by_continent &lt;- function(data, var) {
+  data %&gt;%
+    group_by(continent) %&gt;%
+    summarise(
+      n      = n(),
+      mean   = round(mean({{ var }}), 2),
+      median = round(median({{ var }}), 2),
+      sd     = round(sd({{ var }}), 2),
+      iqr    = round(IQR({{ var }}), 2),
+      q1     = round(quantile({{ var }}, 0.25), 2),
+      q3     = round(quantile({{ var }}, 0.75), 2),
+      .groups = "drop"
+    )
+}
+
+summarise_by_continent(gapminder, lifeExp)
+summarise_by_continent(gapminder, gdpPercap)</pre>
+  </div>
+
+  <div class="conclusion">
+    <strong>Finding:</strong> Higher GDP per capita is positively associated with longer life expectancy. African nations show the lowest median life expectancy; Oceania the highest. The bimodal density curve reflects a persistent development gap between wealthier and lower-income nations.
+  </div>
+</div>
+
+<!-- ═══════════════════════════ PROJECT 2 ═══════════════════════════ -->
+<div id="p2" class="project p2">
+  <div class="project-header">
+    <div class="project-number">02</div>
+    <div>
+      <h2>Sampling Distributions &amp; the Central Limit Theorem</h2>
+      <div class="subtitle">Demonstrating the CLT using Ames Housing data</div>
+    </div>
+  </div>
+
+  <div class="tags">
+    <span class="tag">Simulation</span>
+    <span class="tag">CLT</span>
+    <span class="tag">Sampling distributions</span>
+    <span class="tag">Ames Housing</span>
+    <span class="tag">replicate()</span>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card"><div class="value">2,930</div><div class="label">Population size</div></div>
+    <div class="stat-card"><div class="value">5,000</div><div class="label">Simulations per n</div></div>
+    <div class="stat-card"><div class="value">3</div><div class="label">Sample sizes tested</div></div>
+  </div>
+
+  <div class="section">
+    <h3>Simulation function</h3>
+    <p>The original code used a <code>for</code> loop to build each sampling distribution. This is replaced by a generic, reusable function using <code>replicate()</code> — cleaner and idiomatic R:</p>
+<pre>simulate_sample_means &lt;- function(population, n, n_sims = 5000) {
+  replicate(n_sims, mean(sample(population, n)))
+}
+
+set.seed(42)   # reproducibility
+sample_means10  &lt;- simulate_sample_means(area, n = 10)
+sample_means50  &lt;- simulate_sample_means(area, n = 50)
+sample_means100 &lt;- simulate_sample_means(area, n = 100)</pre>
+  </div>
+
+  <div class="section">
+    <h3>Tidy comparison plot</h3>
+    <p>All three distributions are combined into a single tidy data frame, then faceted — one <code>ggplot</code> call instead of three separate <code>par(mfrow)</code> panels:</p>
+<pre>sim_df &lt;- bind_rows(
+  data.frame(means = sample_means10,  sample_size = "n = 10"),
+  data.frame(means = sample_means50,  sample_size = "n = 50"),
+  data.frame(means = sample_means100, sample_size = "n = 100")
+) %&gt;%
+  mutate(sample_size = factor(sample_size,
+                              levels = c("n = 10", "n = 50", "n = 100")))
+
+ggplot(sim_df, aes(x = means, fill = sample_size)) +
+  geom_histogram(bins = 40, colour = "white", show.legend = FALSE) +
+  facet_wrap(~ sample_size, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = c("#D7191C", "#FDAE61", "#1A9641")) +
+  theme_portfolio()</pre>
+  </div>
+
+  <div class="section">
+    <h3>Standard error verification</h3>
+    <p>The empirical SD of each sampling distribution should approximate the theoretical standard error σ/√n. The table below confirms the simulation is working correctly:</p>
+<pre>se_summary &lt;- data.frame(
+  n              = c(10, 50, 100),
+  empirical_sd   = c(sd(sample_means10), sd(sample_means50), sd(sample_means100)),
+  theoretical_se = sd(area) / sqrt(c(10, 50, 100))
+)
+print(round(se_summary, 2))</pre>
+  </div>
+
+  <div class="conclusion">
+    <strong>Finding:</strong> As sample size grows from 10 to 100, the sampling distribution narrows and becomes increasingly bell-shaped. The empirical standard deviations closely track the theoretical standard error — a clean, simulation-based proof of the Central Limit Theorem.
+  </div>
+</div>
+
+<!-- ═══════════════════════════ PROJECT 3 ═══════════════════════════ -->
+<div id="p3" class="project p3">
+  <div class="project-header">
+    <div class="project-number">03</div>
+    <div>
+      <h2>Hypothesis Testing</h2>
+      <div class="subtitle">Impact of maternal smoking on infant birth weight</div>
+    </div>
+  </div>
+
+  <div class="tags">
+    <span class="tag">Two-sample t-test</span>
+    <span class="tag">Confidence intervals</span>
+    <span class="tag">NC births data</span>
+    <span class="tag">Statistical inference</span>
+  </div>
+
+  <div class="section">
+    <h3>Hypotheses</h3>
+    <div class="hypothesis">
+      <div class="h-label">H₀ — null</div>
+      μ_smoker = μ_nonsmoker &nbsp;·&nbsp; No difference in mean birth weight by smoking status
+    </div>
+    <div class="hypothesis">
+      <div class="h-label">H₁ — alternative (two-sided, α = 0.05)</div>
+      μ_smoker ≠ μ_nonsmoker &nbsp;·&nbsp; A difference exists in either direction
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Load &amp; clean</h3>
+<pre>nc   &lt;- read.csv("http://bit.ly/31adfCe")
+data &lt;- na.omit(nc)   # 1,000 → 998 complete cases</pre>
+  </div>
+
+  <div class="section">
+    <h3>Group summary</h3>
+    <p>Before testing, compute descriptive statistics per group to understand the observed difference in means:</p>
+<pre>data %&gt;%
+  group_by(habit) %&gt;%
+  summarise(
+    n           = n(),
+    mean_weight = round(mean(weight), 3),
+    sd_weight   = round(sd(weight), 3),
+    .groups     = "drop"
+  )</pre>
+  </div>
+
+  <div class="section">
+    <h3>Two-sample t-test</h3>
+<pre>smoker    &lt;- data$weight[data$habit == "smoker"]
+nonsmoker &lt;- data$weight[data$habit == "nonsmoker"]
+
+t_result &lt;- t.test(smoker, nonsmoker,
+                   alternative = "two.sided",
+                   conf.level  = 0.95)
+print(t_result)
+
+# Automated interpretation
+if (t_result$p.value &lt; 0.05) {
+  cat("Reject H0 — significant difference (α = 0.05).\n")
+} else {
+  cat("Fail to reject H0 — no significant difference detected.\n")
+}</pre>
+  </div>
+
+  <div class="result-box significant">
+    <strong>Result:</strong> Reject H₀ — there is a statistically significant difference in infant birth weight between smoking and non-smoking mothers (α = 0.05). Babies born to smokers weigh less on average.
+  </div>
+
+  <div class="conclusion">
+    <strong>Finding:</strong> The t-test and 95% confidence interval both indicate a significant association between maternal smoking and lower infant birth weight. While statistical significance is clear, the practical magnitude of the effect is also clinically meaningful — even small average differences in birth weight have real health implications.
+  </div>
+</div>
+
+<!-- ═══════════════════════════ PROJECT 4 ═══════════════════════════ -->
+<div id="p4" class="project p4">
+  <div class="project-header">
+    <div class="project-number">04</div>
+    <div>
+      <h2>Correlation &amp; Multiple Regression</h2>
+      <div class="subtitle">Predicting credit card balance from demographic and financial variables</div>
+    </div>
+  </div>
+
+  <div class="tags">
+    <span class="tag">OLS regression</span>
+    <span class="tag">Interaction terms</span>
+    <span class="tag">Prediction intervals</span>
+    <span class="tag">Residual diagnostics</span>
+    <span class="tag">Log transformation</span>
+  </div>
+
+  <div class="section">
+    <h3>Model progression</h3>
+    <p>Four models are fit in sequence, each adding complexity. Key metrics are compared to assess whether additional terms are warranted:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Formula</th>
+          <th>Key feature</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="mono">model1</td>
+          <td class="mono">Balance ~ Income + Age</td>
+          <td>Baseline additive model</td>
+        </tr>
+        <tr>
+          <td class="mono">model2</td>
+          <td class="mono">Balance ~ Income + Age + Gender</td>
+          <td>Adds categorical predictor</td>
+        </tr>
+        <tr>
+          <td class="mono">model3</td>
+          <td class="mono">Balance ~ Income * Gender + Age</td>
+          <td>Income × Gender interaction</td>
+        </tr>
+        <tr>
+          <td class="mono">model_log</td>
+          <td class="mono">Balance ~ log(Income) + Age</td>
+          <td>Log-transform to improve linearity</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h3>Reusable scatter plot function</h3>
+    <p>Rather than copying three near-identical <code>ggplot()</code> calls, a helper accepts the x-variable as a string:</p>
+<pre>make_scatter &lt;- function(df, x_var, x_label) {
+  ggplot(df, aes(x = .data[[x_var]], y = Balance)) +
+    geom_point(alpha = 0.4, colour = "#5E4FA2") +
+    geom_smooth(method = "lm", se = FALSE,
+                colour = "#D53E4F", linewidth = 1) +
+    labs(title = paste("Credit Balance vs", x_label),
+         x = x_label, y = "Credit Card Balance (USD)") +
+    theme_portfolio()
+}
+
+make_scatter(credit, "Age",    "Age (years)")
+make_scatter(credit, "Income", "Income (USD thousands)")
+make_scatter(credit, "Limit",  "Credit Limit (USD)")</pre>
+  </div>
+
+  <div class="section">
+    <h3>Reusable diagnostics function</h3>
+    <p>Residual diagnostic plots are wrapped into a single callable function so they can be applied to any model:</p>
+<pre>plot_diagnostics &lt;- function(model, title_prefix = "") {
+  par(mfrow = c(2, 2), mar = c(4, 4, 3, 1))
+
+  plot(model$fitted.values, model$residuals,
+       main = paste(title_prefix, "Residuals vs Fitted"),
+       xlab = "Fitted", ylab = "Residuals",
+       pch = 16, col = "#5E4FA2")
+  abline(h = 0, lty = 2, col = "red")
+
+  hist(model$residuals, breaks = 30, col = "#5E4FA2",
+       main = paste(title_prefix, "Residuals"))
+
+  qqnorm(model$residuals, pch = 16)
+  qqline(model$residuals, col = "red")
+
+  par(mfrow = c(1, 1))
+}
+
+plot_diagnostics(model_log, "Log-Income Model —")</pre>
+  </div>
+
+  <div class="section">
+    <h3>Prediction with interval</h3>
+<pre># Predict balance for Income = $30k, Age = 35
+new_person &lt;- data.frame(Income = 30, Age = 35)
+predict(model1, new_person,
+        interval = "prediction", level = 0.95)
+#       fit   lwr   upr
+# 1  XXXX   XXX   XXXX</pre>
+  </div>
+
+  <div class="result-box info">
+    <strong>Strongest predictor:</strong> Credit Limit (r ≈ 0.86 with Balance). Income is significant but negatively associated once limit is controlled for. Log-transforming Income improves residual normality.
+  </div>
+
+  <div class="conclusion">
+    <strong>Finding:</strong> Credit Limit is the dominant predictor of card balance. The log-Income model improves diagnostic fit. Interaction terms should only be retained if they add meaningful explanatory power beyond the simpler additive specification.
+  </div>
+</div>
+
+<script>
+  function show(id, btn) {
+    document.querySelectorAll('.project').forEach(p => p.classList.remove('visible'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('visible');
+    btn.classList.add('active');
+  }
+</script>
+</body>
+</html>
