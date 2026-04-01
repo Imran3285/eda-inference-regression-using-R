@@ -91,8 +91,8 @@ This repository contains four end-to-end statistical analysis projects completed
 
 ```text
 .
+├── images/
+├── .gitattributes.
 ├── README.md
 ├── statistics_projects.R
-├── statistics_report.html
-├── images/
-└── .gitattributes
+└── statistics_report.html
